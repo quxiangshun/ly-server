@@ -1,0 +1,45 @@
+# 监听 80 端口，为当前目录提供静态文件服务
+:80 {
+    # 静态文件根目录（即 Caddyfile 所在目录）
+    root * D:/BaiduNetdiskDownload/caddy_2.11.0-beta.2_windows_amd64
+    # 启用文件浏览（可选，访问时能看到目录文件列表）
+    file_server
+	# 全局生效，所有文件强制触发下载（核心关键）
+    header * Content-Disposition "attachment"
+	
+    # 性能优化：开启 Gzip+Zstd 双重压缩，减小文件传输体积（图片/视频/压缩包自动跳过）
+    encode gzip zstd
+
+    # 缓存优化：静态文件设置1小时缓存（降低重复请求，浏览器/客户端自动缓存）
+    header * Cache-Control "public, max-age=3600"
+
+    # 安全性配置：防止MIME类型嗅探，避免跨站风险
+    header * X-Content-Type-Options "nosniff"
+
+    # 自定义索引文件（访问目录优先加载，默认index.html，可追加多个）
+    try_files {path} {path}/index.html index.htm
+
+    # 禁止访问敏感文件/目录（防止泄露配置、日志、隐藏文件）
+    @forbidden {
+        path /.env /.git* /.svn* /*.log /*.tmp /*.bak /*.swp
+        path /Caddyfile /caddy.exe /caddy  # 屏蔽Caddy自身文件（Windows/Linux分别适配）
+    }
+    respond @forbidden 403 Forbidden  # 禁止访问返回403错误
+
+    # 可选：访问日志（方便排查问题，按大小滚动，不占磁盘）
+    log {
+        output file 你的日志存放路径/static-server.log {  # Windows/Linux 按实际路径修改
+            roll_size 200MB  # 单文件200MB自动分割
+            roll_keep 10     # 保留最近10个日志文件
+        }
+        level info  # 仅记录请求/响应关键信息，不占资源
+    }
+
+    # 可选：跨域支持（若前端项目/客户端跨域请求文件，必须开启，无跨域可删除）
+    header * Access-Control-Allow-Origin "*"
+    header * Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+    header * Access-Control-Allow-Headers "Content-Type"
+    # 处理跨域预检OPTIONS请求
+    @options method OPTIONS
+    respond @options 204
+}

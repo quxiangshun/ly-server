@@ -1,0 +1,62 @@
+{
+  "name": "ly-manager",
+  "version": "1.0.0",
+  "description": "栾媛可视化服务器",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && electron-builder",
+    "build:vite": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build:icon": "node scripts/build-icon.mjs",
+    "electron:build": "vite build && npm run build:icon && electron-builder",
+    "electron:reinstall": "npx --yes rimraf node_modules/electron && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ npm install electron",
+    "electron:reinstall-only": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ npm install electron",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "element-plus": "^2.8.4",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "png-to-ico": "^3.0.1",
+    "vite": "^6.0.3",
+    "wait-on": "^8.0.1"
+  },
+    "build": {
+    "appId": "com.ly.caddy-manager",
+    "productName": "栾媛可视化服务器",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "caddy",
+        "to": "caddy"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

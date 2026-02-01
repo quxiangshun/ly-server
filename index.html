@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>栾媛可视化服务器</title>
+    <script>
+      (function() {
+        var parts = location.href.split('/');
+        parts.pop();
+        var base = parts.join('/') + '/';
+        var link = document.createElement('link');
+        link.rel = 'icon';
+        link.type = 'image/x-icon';
+        link.href = base + 'favicon.ico';
+        document.head.appendChild(link);
+      })();
+    </script>
+    <link rel="icon" href="./favicon.ico" sizes="48x48" type="image/x-icon" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
