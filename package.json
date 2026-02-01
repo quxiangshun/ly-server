@@ -1,5 +1,5 @@
 {
-  "name": "ly-manager",
+  "name": "ly-server",
   "version": "1.0.0",
   "description": "栾媛可视化服务器",
   "main": "electron/main.js",
@@ -26,12 +26,14 @@
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2",
     "vite": "^6.0.3",
     "wait-on": "^8.0.1"
   },
     "build": {
-    "appId": "com.ly.caddy-manager",
+    "appId": "com.ly-server",
     "productName": "栾媛可视化服务器",
+    "afterPack": "./scripts/afterPack.mjs",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -56,7 +58,9 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
     }
   }
 }
